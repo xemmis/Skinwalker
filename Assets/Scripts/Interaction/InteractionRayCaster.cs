@@ -6,7 +6,8 @@ public class InteractionRayCaster : MonoBehaviour
     [Header("Interaction Settings")]
     [SerializeField] private float _interactionDistance = 3f;
     [SerializeField] private LayerMask _interactionLayer;
-    [SerializeField] private KeyCode _interactionKey = KeyCode.Mouse0;
+    [SerializeField] private KeyCode _pickUpKey = KeyCode.Mouse0;
+    [SerializeField] private KeyCode _interactionKey = KeyCode.E;
     [SerializeField] private Vector3 _holdOffset = new Vector3(0.5f, -0.3f, 1f); // Offset в локальных координатах камеры
 
     [Header("Visual Feedback")]
@@ -22,6 +23,7 @@ public class InteractionRayCaster : MonoBehaviour
 
     private Camera _mainCamera;
     private Interactable _heldObject;
+    private Interactable _objectInRange;
     private Transform _interactionPivot;
 
     private void Awake()
@@ -29,19 +31,6 @@ public class InteractionRayCaster : MonoBehaviour
         _mainCamera = GetComponent<Camera>();
         _image = GetComponentInChildren<Image>();
         CreateInteractionPivot();
-        InitializeLaserSight();
-    }
-
-    private void Start()
-    {
-        if (_laserSight == null)
-        {
-            _laserSight = gameObject.AddComponent<LineRenderer>();
-            _laserSight.material = new Material(Shader.Find("Sprites/Default")); // ”становка простого материала
-            _laserSight.useWorldSpace = true;
-        }
-
-        InitializeLaserSight();
     }
 
     private void CreateInteractionPivot()
@@ -55,7 +44,7 @@ public class InteractionRayCaster : MonoBehaviour
     private void Update()
     {
         UpdateInteractionPivot(); // <-- ƒобавлено
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(_pickUpKey))
         {
             if (_heldObject == null)
                 TryInteract();
@@ -63,9 +52,15 @@ public class InteractionRayCaster : MonoBehaviour
                 DropObject();
         }
 
+        if (Input.GetKeyDown(_interactionKey) && _heldObject != null)
+        {
+            _heldObject.Interact();
+        }
+
         if (_heldObject != null)
             UpdateHeldObject();
     }
+
 
     private void UpdateInteractionPivot()
     {
@@ -82,7 +77,7 @@ public class InteractionRayCaster : MonoBehaviour
             if (hit.collider.TryGetComponent<Interactable>(out var interactable))
             {
                 _heldObject = interactable;
-                _heldObject.Interact(_interactionPivot);
+                _heldObject.PickUp(_interactionPivot);
             }
         }
 
@@ -112,15 +107,15 @@ public class InteractionRayCaster : MonoBehaviour
             _heldObject = null;
         }
     }
-    private void InitializeLaserSight()
-    {
-        if (_laserSight != null)
-        {
-            _laserSight.positionCount = 2;
-            _laserSight.startWidth = _defaultLaserWidth;
-            _laserSight.endWidth = _defaultLaserWidth;
-        }
-    }
 
+    private void UpdateLaserSight()
+    {
+        if (_laserSight == null) return;
+
+        Ray ray = _mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        _canInteract = Physics.Raycast(ray, _interactionDistance, _interactionLayer) && _heldObject == null;
+
+
+    }
 }
 

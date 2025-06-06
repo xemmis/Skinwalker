@@ -1,11 +1,11 @@
 using UnityEngine;
 
-[RequireComponent (typeof(Rigidbody))]
-[RequireComponent (typeof(BoxCollider))]
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(BoxCollider))]
 public class Interactable : MonoBehaviour
 {
     [SerializeField] private float _pushForce = 5;
-
+    public IngredientType Type;
     private Rigidbody _rb;
     private Collider _collider;
 
@@ -16,7 +16,7 @@ public class Interactable : MonoBehaviour
         _collider = GetComponent<Collider>();
     }
 
-    public void Interact(Transform holdPoint)
+    public virtual void PickUp(Transform holdPoint)
     {
         if (_rb != null)
         {
@@ -26,7 +26,12 @@ public class Interactable : MonoBehaviour
         _collider.enabled = false;
     }
 
-    public void Drop()
+    public virtual void Interact()
+    {
+
+    }
+
+    public virtual void Drop()
     {
         if (_rb != null)
         {
@@ -37,10 +42,5 @@ public class Interactable : MonoBehaviour
         _collider.enabled = true;
     }
 
-
-}
-
-public class Bun : Interactable
-{
 
 }
