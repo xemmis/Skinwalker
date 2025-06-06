@@ -10,11 +10,6 @@ public class InteractionRayCaster : MonoBehaviour
     [SerializeField] private Vector3 _holdOffset = new Vector3(0.5f, -0.3f, 1f); // Offset в локальных координатах камеры
 
     [Header("Visual Feedback")]
-    [SerializeField] private LineRenderer _laserSight;
-    [SerializeField] private Color _activeColor = Color.green;
-    [SerializeField] private Color _inactiveColor = Color.red;
-    [SerializeField] private float _defaultLaserWidth = 0.01f;
-    [SerializeField] private float _pressedLaserWidth = 0.05f;
     [SerializeField] private bool _canInteract;
     [SerializeField] private Image _image;
     [SerializeField] private float _rayRadius = 0.05f;
@@ -27,21 +22,7 @@ public class InteractionRayCaster : MonoBehaviour
     private void Awake()
     {
         _mainCamera = GetComponent<Camera>();
-        _image = GetComponentInChildren<Image>();
         CreateInteractionPivot();
-        InitializeLaserSight();
-    }
-
-    private void Start()
-    {
-        if (_laserSight == null)
-        {
-            _laserSight = gameObject.AddComponent<LineRenderer>();
-            _laserSight.material = new Material(Shader.Find("Sprites/Default")); // ”становка простого материала
-            _laserSight.useWorldSpace = true;
-        }
-
-        InitializeLaserSight();
     }
 
     private void CreateInteractionPivot()
@@ -55,6 +36,7 @@ public class InteractionRayCaster : MonoBehaviour
     private void Update()
     {
         UpdateInteractionPivot(); // <-- ƒобавлено
+        UpdateLaserSight();
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (_heldObject == null)
@@ -88,6 +70,14 @@ public class InteractionRayCaster : MonoBehaviour
 
     }
 
+    private void UpdateLaserSight()
+    {
+        Ray ray = _mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        _canInteract = Physics.Raycast(ray, _interactionDistance, _interactionLayer) && _heldObject == null;
+        if (_canInteract) _image.color = Color.white;
+        else _image.color = new Color(1,1,1,0.2f);
+    }
+
     private void UpdateHeldObject()
     {
         // ѕлавное перемещение к Pivot (позици€ и поворот)
@@ -112,15 +102,7 @@ public class InteractionRayCaster : MonoBehaviour
             _heldObject = null;
         }
     }
-    private void InitializeLaserSight()
-    {
-        if (_laserSight != null)
-        {
-            _laserSight.positionCount = 2;
-            _laserSight.startWidth = _defaultLaserWidth;
-            _laserSight.endWidth = _defaultLaserWidth;
-        }
-    }
+
 
 }
 
