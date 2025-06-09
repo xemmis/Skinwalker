@@ -22,6 +22,8 @@ public class Interactable : MonoBehaviour
         {
             _rb.isKinematic = true;
             _rb.interpolation = RigidbodyInterpolation.None;
+            Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Item"), LayerMask.NameToLayer("Player"), true);
+
         }
         _collider.enabled = false;
     }
@@ -36,8 +38,10 @@ public class Interactable : MonoBehaviour
         if (_rb != null)
         {
             _rb.isKinematic = false;
-            _rb.AddForce(transform.forward * _pushForce,ForceMode.Impulse);
+            _rb.AddForce(transform.forward * _pushForce, ForceMode.Impulse);
             _rb.interpolation = RigidbodyInterpolation.Interpolate;
+            Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Item"), LayerMask.NameToLayer("Player"), false);
+
         }
         _collider.enabled = true;
     }

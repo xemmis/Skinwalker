@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: burger_with_cheese Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ba2efb67efa699a4fa3555fe598ce924, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

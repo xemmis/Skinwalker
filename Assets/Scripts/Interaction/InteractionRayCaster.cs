@@ -13,11 +13,11 @@ public class InteractionRayCaster : MonoBehaviour
     [SerializeField] private bool _canInteract;
     [SerializeField] private Image _image;
     [SerializeField] private float _rayRadius = 0.05f;
+    [SerializeField] private Transform _interactionPivot;
 
 
     private Camera _mainCamera;
     private Interactable _heldObject;
-    private Transform _interactionPivot;
 
     private void Awake()
     {
@@ -64,7 +64,7 @@ public class InteractionRayCaster : MonoBehaviour
             if (hit.collider.TryGetComponent<Interactable>(out var interactable))
             {
                 _heldObject = interactable;
-                _heldObject.Interact(_interactionPivot);
+                _heldObject.PickUp(_interactionPivot);
             }
         }
 

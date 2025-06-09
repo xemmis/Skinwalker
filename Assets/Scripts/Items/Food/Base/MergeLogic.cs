@@ -12,7 +12,7 @@ public class MergeLogic : MonoBehaviour
             component.Type == _requiredIngredient && !_interacted)
         {
             _interacted = true;
-            Instantiate(_nextStage, transform.position, Quaternion.identity);
+            Instantiate(_nextStage, transform.position, Quaternion.EulerRotation(-90,0,0));
             Destroy(other.gameObject);
             Destroy(gameObject);
         }

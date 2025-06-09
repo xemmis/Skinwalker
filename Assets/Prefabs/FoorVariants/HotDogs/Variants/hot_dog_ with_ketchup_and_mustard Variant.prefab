@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: hot_dog_ with_ketchup_and_mustard Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d38a14da807a68c40b98427969381616, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
