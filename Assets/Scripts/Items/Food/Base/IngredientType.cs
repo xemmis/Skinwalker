@@ -9,6 +9,7 @@
     Sausage,
     RawMeatBall,
     Stage,
+    Package,
     Cola,
     Nothing
 }

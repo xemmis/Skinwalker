@@ -4,7 +4,11 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class Interactable : MonoBehaviour
 {
-    [SerializeField] private float _pushForce = 5;
+    [Space(15)]
+    [Header("Может ли объект использоваться на 'Е'")]
+    public bool CanUse;
+    [Space(15)]
+    [SerializeField] private protected float _pushForce = 5;
     public IngredientType Type;
     private Rigidbody _rb;
     private Collider _collider;
@@ -28,17 +32,17 @@ public class Interactable : MonoBehaviour
         _collider.enabled = false;
     }
 
-    public virtual void Interact()
+    public virtual void Interact(Transform position)
     {
 
     }
 
-    public virtual void Drop()
+    public virtual void Drop(Transform position)
     {
         if (_rb != null)
         {
             _rb.isKinematic = false;
-            _rb.AddForce(transform.forward * _pushForce, ForceMode.Impulse);
+            _rb.AddForce(position.forward * _pushForce, ForceMode.Impulse);
             _rb.interpolation = RigidbodyInterpolation.Interpolate;
             Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Item"), LayerMask.NameToLayer("Player"), false);
 
