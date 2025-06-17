@@ -15,11 +15,13 @@ public class DialogueUI : MonoBehaviour
             _dialogueSystem = DialogueSystem.Instance; // Фолбэк
 
         _dialogueSystem.OnDialogueUpdated.AddListener(UpdateUI);
+        _dialogueSystem.OnDialogue.AddListener(ClearUI);
     }
 
     private void OnDestroy()
     {
-        _dialogueSystem.OnDialogueUpdated.RemoveListener(UpdateUI);        
+        _dialogueSystem.OnDialogueUpdated.RemoveListener(UpdateUI);
+        _dialogueSystem.OnDialogue.RemoveListener(ClearUI);
     }
 
     private void UpdateUI(DialogueNode node)
@@ -32,9 +34,19 @@ public class DialogueUI : MonoBehaviour
             GameObject buttonObj = Instantiate(_answerButtonPrefab, _answersContainer);
             buttonObj.GetComponent<TextMeshProUGUI>().text = answer.Player_Text;
 
-            buttonObj.GetComponent<Button>().onClick.AddListener(() => {
+            buttonObj.GetComponent<Button>().onClick.AddListener(() =>
+            {
                 _dialogueSystem.SelectAnswer(System.Array.IndexOf(node.Answers, answer));
             });
+        }
+    }
+
+    public void ClearUI(bool condition)
+    {
+        if (!condition)
+        {
+            _npcTextUI.text = "";
+            ClearAnswers();
         }
     }
 

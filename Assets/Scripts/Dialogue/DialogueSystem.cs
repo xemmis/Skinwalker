@@ -5,6 +5,7 @@ public class DialogueSystem : MonoBehaviour
 {
     public DialogueNode CurrentNode;
     public UnityEvent<DialogueNode> OnDialogueUpdated; // Событие обновления UI
+    public UnityEvent<bool> OnDialogue; // Событие обновления UI
     public static DialogueSystem Instance { get; private set; }
 
     private void Awake()
@@ -28,16 +29,21 @@ public class DialogueSystem : MonoBehaviour
         if (CurrentNode == null || answerIndex < 0 || answerIndex >= CurrentNode.Answers.Length)
         {
             EndDialogue();
+            print("A?");
             return;
         }
 
         DialogueAnswer selectedAnswer = CurrentNode.Answers[answerIndex];
         CurrentNode = selectedAnswer.NextNode;
 
-        if (CurrentNode != null)
+        if (!CurrentNode.IsEnd)
+        {
             UpdateDialogue();
+        }
         else
+        {
             EndDialogue();
+        }
     }
 
     private void UpdateDialogue()
@@ -48,6 +54,7 @@ public class DialogueSystem : MonoBehaviour
     private void EndDialogue()
     {
         CurrentNode = null;
+        OnDialogue?.Invoke(false);
         Debug.Log("Диалог завершён");
     }
 
