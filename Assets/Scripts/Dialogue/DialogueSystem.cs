@@ -12,7 +12,7 @@ public class DialogueSystem : MonoBehaviour
         if (Instance == null)
             Instance = this;
         else
-          
+
             Destroy(gameObject);
     }
     // Начать диалог
@@ -56,6 +56,6 @@ public class DialogueSystem : MonoBehaviour
         if (other.gameObject.TryGetComponent<InteractionRayCaster>(out InteractionRayCaster component))
         {
             StartDialogue(CurrentNode);
-        } 
+        }
     }
 }

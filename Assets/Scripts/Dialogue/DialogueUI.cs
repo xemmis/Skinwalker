@@ -17,6 +17,11 @@ public class DialogueUI : MonoBehaviour
         _dialogueSystem.OnDialogueUpdated.AddListener(UpdateUI);
     }
 
+    private void OnDestroy()
+    {
+        _dialogueSystem.OnDialogueUpdated.RemoveListener(UpdateUI);        
+    }
+
     private void UpdateUI(DialogueNode node)
     {
         _npcTextUI.text = node.NPC_Text;
