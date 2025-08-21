@@ -182,8 +182,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86ec092806966c64788801e9ad743b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CanUse: 0
   _pushForce: 5
   Type: 9
+  ProductName: Burger
 --- !u!114 &4028918586235781558
 MonoBehaviour:
   m_ObjectHideFlags: 0

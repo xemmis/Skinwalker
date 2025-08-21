@@ -12,7 +12,7 @@ public class Interactable : MonoBehaviour
     public IngredientType Type;
     private Rigidbody _rb;
     private Collider _collider;
-
+    [field: SerializeField] public string ProductName;
 
     private void Awake()
     {
@@ -52,3 +52,5 @@ public class Interactable : MonoBehaviour
 
 
 }
+
+

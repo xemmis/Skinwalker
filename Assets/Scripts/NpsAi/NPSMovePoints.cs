@@ -7,6 +7,8 @@ public class NPSMovePoints : MonoBehaviour
     [field: SerializeField] public List<Transform> PointsToMove { get; private set; }
     [field: SerializeField] public Transform PointToDialogue { get; private set; }
     [field: SerializeField] public Transform PointToExit { get; private set; }
+    [field: SerializeField] public Transform PlayerPoint { get; private set; }
+
 
     private void Awake()
     {

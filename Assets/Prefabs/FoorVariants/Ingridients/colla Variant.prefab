@@ -158,8 +158,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86ec092806966c64788801e9ad743b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CanUse: 0
   _pushForce: 5
   Type: 10
+  ProductName: Cola
 --- !u!65 &7653686361551309622
 BoxCollider:
   m_ObjectHideFlags: 0
