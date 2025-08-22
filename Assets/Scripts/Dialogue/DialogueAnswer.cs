@@ -1,9 +1,12 @@
-﻿using System;
+﻿using UnityEngine.Events;
+using UnityEngine;
 
-[Serializable]
+[System.Serializable]
 public class DialogueAnswer
 {
-    public string Player_Text; // Текст ответа игрока
-    public DialogueNode NextNode; // Следующий узел диалога
-    public bool IsImportantChoice; // Влияет ли выбор на сюжет?
+    [TextArea(2, 3)]
+    public string Text;
+
+    public DialogueNode NextNode;
+    public UnityEvent OnSelect;
 }

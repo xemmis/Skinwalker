@@ -27,12 +27,13 @@ public class FirstPersonMovement : MonoBehaviour
 
     private void Start()
     {
-        _dialogueSystem.OnDialogue.AddListener(DialogueMoveLogic);
+        _dialogueSystem.OnDialogueStateChanged.AddListener(DialogueMoveLogic);
     }
 
     private void OnDestroy()
     {
-        _dialogueSystem.OnDialogue.RemoveListener(DialogueMoveLogic);
+        _dialogueSystem.OnDialogueStateChanged.RemoveListener(DialogueMoveLogic);
+        
     }
 
     public void DialogueMoveLogic(bool condition)

@@ -15,6 +15,7 @@ public class VisitorDialogLogic : MonoBehaviour
     private Rigidbody playerRigidbody;
     private bool isRotating;
     private Quaternion targetCameraRotation;
+    private bool _onDialog = false;
 
     private void Awake()
     {
@@ -42,7 +43,7 @@ public class VisitorDialogLogic : MonoBehaviour
         {
             playerCamera.rotation = targetCameraRotation;
             isRotating = false;
-            _dialogueSystem.OnDialogueUpdated?.Invoke(StartNode);
+            _dialogueSystem.OnDialogueUpdated?.Invoke();
         }
     }
 
@@ -50,7 +51,8 @@ public class VisitorDialogLogic : MonoBehaviour
     {
         if (!other.TryGetComponent<FirstPersonMovement>(out playerMovement))
             return;
-
+        if (_onDialog) return;
+        _onDialog = true;
         // Получаем все необходимые компоненты
         playerCamera = Camera.main.transform;
         playerLook = playerMovement.GetComponentInChildren<FirstPersonLook>();
@@ -108,6 +110,7 @@ public class VisitorDialogLogic : MonoBehaviour
             return;
 
         CancelInvoke(nameof(CheckStopCondition));
+        _onDialog = false;
         isRotating = false;
 
         if (playerLook != null)

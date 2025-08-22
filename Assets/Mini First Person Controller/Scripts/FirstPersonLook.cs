@@ -19,13 +19,14 @@ public class FirstPersonLook : MonoBehaviour
 
     void Start()
     {
-        _dialogueSystem.OnDialogue.AddListener(DialogueMoveLogic);
         Cursor.lockState = CursorLockMode.Locked;
+        _dialogueSystem.OnDialogueStateChanged.AddListener(DialogueMoveLogic);
     }
 
     private void OnDestroy()
     {
-        _dialogueSystem.OnDialogue.RemoveListener(DialogueMoveLogic);
+        _dialogueSystem.OnDialogueStateChanged.RemoveListener(DialogueMoveLogic);
+        
     }
 
     public void DialogueMoveLogic(bool condition)

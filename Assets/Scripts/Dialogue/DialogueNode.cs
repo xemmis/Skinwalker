@@ -1,11 +1,13 @@
-using System;
+using UnityEngine.Events;
 using UnityEngine;
 
-[Serializable]
-public class DialogueNode
+[CreateAssetMenu(menuName = "Dialogue/Node", fileName = "DN_")]
+public class DialogueNode : ScriptableObject
 {
-    public string NPC_Text; // Текст NPC
-    public DialogueAnswer[] Answers; // Варианты ответов
-    public AudioClip VoiceLine; // Опционально: звуковая дорожка
+    [TextArea(3, 5)]
+    public string NPC_Text;
+
+    public DialogueAnswer[] Answers;
+    public AudioClip VoiceLine;
     public bool IsEnd;
 }

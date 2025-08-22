@@ -1,68 +1,98 @@
-﻿using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine.Events;
+using UnityEngine;
 
 public class DialogueSystem : MonoBehaviour
 {
-    public DialogueNode CurrentNode;
-    public UnityEvent<DialogueNode> OnDialogueUpdated; // Событие обновления UI
-    public UnityEvent<bool> OnDialogue; // Событие обновления UI
+    [SerializeField] private DialogueNode _testNode;
+    public DialogueNode CurrentNode { get; private set; }
+    public UnityEvent OnDialogueUpdated;
+    public UnityEvent<bool> OnDialogueStateChanged;
+
     public static DialogueSystem Instance { get; private set; }
+
+    private bool _isInDialogue = false;
 
     private void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+        }
         else
-
+        {
             Destroy(gameObject);
+            return;
+        }
     }
-    // Начать диалог
+
     public void StartDialogue(DialogueNode startNode)
     {
-        CurrentNode = startNode;
-        UpdateDialogue();
-    }
-
-    // Выбрать ответ
-    public void SelectAnswer(int answerIndex)
-    {
-        if (CurrentNode == null || answerIndex < 0 || answerIndex >= CurrentNode.Answers.Length)
+        if (_isInDialogue || startNode == null)
         {
-            EndDialogue();
-            print("A?");
+            Debug.LogWarning(_isInDialogue ? "Dialogue already in progress!" : "Start node is null!");
             return;
         }
 
-        DialogueAnswer selectedAnswer = CurrentNode.Answers[answerIndex];
-        CurrentNode = selectedAnswer.NextNode;
+        _isInDialogue = true;
+        CurrentNode = startNode;
+        OnDialogueStateChanged?.Invoke(true);
+        UpdateDialogue();
+    }
 
-        if (!CurrentNode.IsEnd)
+    public void SelectAnswer(int answerIndex)
+    {
+        if (CurrentNode == null || CurrentNode.Answers == null ||
+            answerIndex < 0 || answerIndex >= CurrentNode.Answers.Length)
         {
-            UpdateDialogue();
+            Debug.LogWarning("Invalid answer selection");
+            EndDialogue();
+            return;
         }
-        else
+
+        var answer = CurrentNode.Answers[answerIndex];
+        answer.OnSelect?.Invoke();
+
+        if (answer.NextNode == null)
         {
             EndDialogue();
+            return;
         }
+
+        CurrentNode = answer.NextNode;
+
+        if (CurrentNode.IsEnd)
+            EndDialogue();
+        else
+            UpdateDialogue();
     }
 
     private void UpdateDialogue()
     {
-        OnDialogueUpdated.Invoke(CurrentNode); // Уведомляем UI
+        OnDialogueUpdated?.Invoke();
+        PlayVoiceLine(CurrentNode.VoiceLine);
     }
 
-    private void EndDialogue()
+    private void PlayVoiceLine(AudioClip clip)
     {
-        CurrentNode = null;
-        OnDialogue?.Invoke(false);
-        Debug.Log("Диалог завершён");
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.TryGetComponent<InteractionRayCaster>(out InteractionRayCaster component))
+        if (clip != null)
         {
-            StartDialogue(CurrentNode);
+            AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
         }
+    }
+
+    public void EndDialogue()
+    {
+        _isInDialogue = false;
+        CurrentNode = null;
+        OnDialogueStateChanged?.Invoke(false);
+    }
+
+    [ContextMenu("Test Dialogue")]
+    private void TestDialogue()
+    {
+        if (_testNode != null)
+            StartDialogue(_testNode);
+        else
+            Debug.LogWarning("No test node assigned!");
     }
 }
